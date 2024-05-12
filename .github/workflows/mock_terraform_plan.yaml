@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
+      operation: ${{ env.OPERATION }}
       targets: ${{ steps.targets.outputs.targets }}
 
     steps:
@@ -22,9 +23,6 @@ jobs:
         with:
           fetch-depth: 0
           clean: false
-
-      - name: test ${{ env.OPERATION }}
-        run: echo
 
       - name: get git diff files as list
         id: changed-files
@@ -36,7 +34,7 @@ jobs:
           bash ./bin/get_tf_targets.sh ${{ steps.changed-files.outputs.all_changed_files }}
 
   call_reusable_terraform:
-    name: do terraform ${{ env.OPERATION }}
+    name: do terraform ${{ needs.get_targets.outputs.targets.operation }}
     needs: get_targets
     uses: kaz-under-the-bridge/github-actions-playground/.github/workflows/_reusable_terraform.yaml@main
     with:
