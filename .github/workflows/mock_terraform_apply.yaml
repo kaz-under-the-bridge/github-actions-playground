@@ -1,14 +1,14 @@
-name: mockup-terraform-plan-on-pull-request
+name: mockup-terraform-apply-on-merge
 
 on:
-  pull_request:
+  push:
     branches:
       - main
     paths:
       - dummy/terraform/**/*
 
 env:
-  OPERATION: plan
+  OPERATION: apply
 
 jobs:
   get_targets:
