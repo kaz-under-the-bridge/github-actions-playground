@@ -69,4 +69,6 @@ __organizing_targets $@
 # 上記ファイル内のyaml配列をjsonに変換する。併せて重複を排除。以下のようなJSON文字列に変換される
 # これを$GITHUB_OUTPUT変数に出力する（target_dirsという名前の::set-output::に反映される）
 # ["dummy/terraform/project-a","dummy/terraform/project-b"]
-echo "target_dirs=$(__convert_to_json)" >> $GITHUB_OUTPUT
+target_dirs=$(__convert_to_json)
+echo $target_dirs
+echo "target_dirs=$target_dirs" >> $GITHUB_OUTPUT

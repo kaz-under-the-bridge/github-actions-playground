@@ -16,7 +16,7 @@ jobs:
 
     outputs:
       operation: ${{ env.OPERATION }}
-      targets: ${{ steps.targets.outputs.targets }}
+      target_dirs: ${{ steps.get_target_dirs.outputs.target_dirs }}
 
     steps:
       - uses: actions/checkout@v3
@@ -29,7 +29,7 @@ jobs:
         uses: tj-actions/changed-files@v36
 
       - name: organize and convert diff list to json
-        id: targets
+        id: get_target_dirs
         run: |
           bash ./bin/get_tf_targets.sh ${{ steps.changed-files.outputs.all_changed_files }}
 
@@ -37,7 +37,7 @@ jobs:
   call_reusable_terraform:
     name: do terraform ${{ needs.get_targets.outputs.targets.operation }}
     needs: get_targets
-    uses: kaz-under-the-bridge/github-actions-playground/.github/workflows/_reusable_terraform.yaml@main
+    uses: kaz-under-the-bridge/github-actions-playground/.github/workflows/_reusable_terraform.yaml@kaz/test-tf-plan
     with:
-      operation: ${{ needs.get_targets.outputs.targets.operation }}
-      targets: ${{ needs.get_targets.outputs.targets }}
+      operation: ${{ needs.get_targets.outputs.operation }}
+      target_dirs: ${{ needs.get_targets.outputs.target_dirs }}
