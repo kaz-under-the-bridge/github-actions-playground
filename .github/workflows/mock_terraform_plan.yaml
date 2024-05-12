@@ -23,6 +23,9 @@ jobs:
           fetch-depth: 0
           clean: false
 
+      - name: test ${{ env.OPERATION }}
+        run: echo
+
       - name: get git diff files as list
         id: changed-files
         uses: tj-actions/changed-files@v36
