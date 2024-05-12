@@ -31,3 +31,8 @@ WARN  ⚠ You are using Apple M-series chip and you have not specified container
 Stage  Job ID       Job name     Workflow name                          Workflow file              Events      
 0      get_targets  get_targets  mockup-terraform-plan-on-pull-request  _mock_terraform_plan.yaml  pull_request
 ```
+
+### test specified workflow
+```
+act --container-architecture linux/amd64 -j <job_name>
+```

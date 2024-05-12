@@ -1,0 +1,64 @@
+on:
+  workflow_call:
+    inputs:
+      operation:
+        type: string
+        required: true
+      target_dirs:
+        type: string
+        required: true
+
+env:
+  TF_VERSION: 1.8.3
+
+jobs:
+  terraform_runner:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        dir: ${{ fromJson(inputs.target_dirs) }}
+
+    name: ${{ matrix.dir }}
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ matrix.dir }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          clean: false
+
+      - name: show working directory
+        run: |
+          pwd
+
+      - name: install tf binary by tfenv
+        run: |
+          echo "tfenv install ${{ env.TF_VERSION }}"
+
+      - name: set tf version
+        run: |
+          echo "tfenv use ${{ env.TF_VERSION }}"
+
+      - name: tf init in ${{ matrix.dir }}
+        run: |
+          echo "terraform init"
+
+      - name: tf update module in ${{ matrix.dir }}
+        run: |
+          echo "terraform get -update"
+
+      - name: tf plan in ${{ matrix.dir }}
+        if: inputs.operation == 'plan'
+        run: |
+          echo "terraform plan"
+
+      - name: tf apply in ${{ matrix.dir }}
+        if: inputs.operation == 'apply'
+        run: |
+          echo "terraform apply -auto-approve"
